@@ -3,6 +3,25 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/**
+ *
+ * bulk Subtitle Formatter v1.0
+ *
+ * Pass a directory path and it will format all files down to base names.
+ *
+ * Assuming subtitles are from addic7ed.com
+ *
+ * For more details read the inspiration inside the src folder
+ *
+ *
+ * Usage: javac Main.java "E:\TV Shows\Silicon Valley\Season 1"
+ *
+ * Input: E:\TV Shows\Silicon Valley\Season 1
+ * Output: x files renamed
+ *
+ *
+ */
+
 public class Main
 {
     static String directoryPath;
@@ -34,7 +53,12 @@ public class Main
 
     static boolean reNameFunction(String fileName, String newFileName)
     {
-        return false;
+        File oldFile = new File(directoryPath+"\\"+fileName);
+        File newFile = new File(directoryPath+"\\"+newFileName);
+
+        newFile.delete();
+
+        return oldFile.renameTo(newFile);
     }
 
     static void incrementCount()
