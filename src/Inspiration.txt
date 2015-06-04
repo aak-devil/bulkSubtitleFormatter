@@ -1,0 +1,25 @@
+Everyone has a way of living their life.
+
+I am very particular about how I store my digital files.
+
+I generally make it a point to download subtitle files from addic7ed.com
+
+They generally name their files like this: Silicon Valley - 01x01 - Minimum Viable Product.KILLERS.English.C.edit.Addic7ed.com.srt
+
+I manually rename it to: Silicon Valley - 01x01 - Minimum Viable Product.srt
+
+Then the particular video file gets renamed to: Silicon Valley - 01x01 - Minimum Viable Product.mp4
+
+You get the structure don't you?
+
+
+The idea is to automate this process.
+
+I will first start with filtering down the srt files to the format I prefer
+
+Maybe in the future I can automate the process of renaming the video files as well.
+
+
+4th June 2015.
+
+Started work on Phase 1: SRT Files Formatter
