@@ -295,12 +295,22 @@ class PrinterClass
     static File file;
     static PrintWriter fileWriter;
 
+    /**
+     * Constructor to initialize PrintWriter Object and the File
+     * @param z Working Directory
+     * @throws IOException
+     */
     PrinterClass(String z) throws IOException
     {
         workingDirectory=z;
         file = new File(workingDirectory+"/subtitleFormatterLog.txt");
         fileWriter = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
     }
+
+    /**
+     *
+     * @param z Any String to be printed from the videoFileMapper and subtitleFormatter Class
+     */
     static void dualPrinter(String z)
     {
         fileWriter.println(z);
