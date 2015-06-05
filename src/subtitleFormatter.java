@@ -199,7 +199,7 @@ class videoFileMapper
             {
                 subtitleFiles[subIndex++]=getRidOfFileExtension(fileNameIterator);
             }
-            else if(extension.equalsIgnoreCase("mp4")||extension.equalsIgnoreCase("avi"))
+            else if(extension.equalsIgnoreCase("mp4")||extension.equalsIgnoreCase("avi")||extension.equalsIgnoreCase("mkv"))
             {
                 if(vidIndex==0)
                 {
