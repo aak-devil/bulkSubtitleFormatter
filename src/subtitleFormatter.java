@@ -40,6 +40,14 @@ public class subtitleFormatter
 {
     static String directoryPath;
     static int reNameCount=0;
+
+    /**
+     *
+     * @param args
+     * @throws IOException
+     * Main Driver Function
+     *
+     */
     public static void main(String[] args) throws IOException
     {
         directoryPath=args[0];
@@ -88,6 +96,12 @@ public class subtitleFormatter
         }
     }
 
+    /**
+     *
+     * @param fileName
+     * @param newFileName
+     * @return true of false depending whether the renaming was successful or not
+     */
     static boolean reNameFunction(String fileName, String newFileName)
     {
         File oldFile = new File(directoryPath+"\\"+fileName);
@@ -99,10 +113,17 @@ public class subtitleFormatter
         return oldFile.renameTo(newFile);
     }
 
+    /**
+     *
+     * @param z
+     * @return extension from the FileName
+     *
+     */
     static String getExtension(String z)
     {
         return z.substring(z.lastIndexOf('.') + 1);
     }
+
     static void incrementCount()
     {
         reNameCount++;
@@ -147,6 +168,10 @@ class videoFileMapper
     static subtitleFormatter newSubtitleFormatter;
     static int numOfFiles;
 
+    /**
+     *
+     * @param x
+     */
     videoFileMapper(String x)
     {
         this.newSubtitleFormatter = new subtitleFormatter();
@@ -154,6 +179,9 @@ class videoFileMapper
         this.fileCollection();
     }
 
+    /**
+     * Collects all the files in the current directory and sorts them into two arrays, one for srt and one for video
+     */
     public static void fileCollection()
     {
         numOfFiles=quicklyTellMeNumberOfSubtitles();
@@ -180,6 +208,9 @@ class videoFileMapper
         callerOfRenamer();
     }
 
+    /**
+     * Calls the helper function reNameFunction in subtitleFormatter
+     */
     static void callerOfRenamer()
     {
         int count=0;
@@ -193,11 +224,20 @@ class videoFileMapper
         System.out.println(count+" video files renamed");
     }
 
+    /**
+     *
+     * @param z
+     * @return File Name with attached Extension
+     */
     static String attachVideoExtension(String z)
     {
         return z+"."+videoExtension;
     }
 
+    /**
+     *
+     * @return number of formatted srt files in the directory
+     */
     static int quicklyTellMeNumberOfSubtitles()
     {
         int count=0;
@@ -213,6 +253,11 @@ class videoFileMapper
         return count;
     }
 
+    /**
+     *
+     * @param z
+     * @return Base File Name without extension
+     */
     public static String getRidOfFileExtension(String z)
     {
         return z.substring(0,z.length()-4);
