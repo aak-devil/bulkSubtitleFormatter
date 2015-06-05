@@ -77,6 +77,7 @@ public class subtitleFormatter
                 }
             }
         });
+
         if(reNameCount>0)
         {
             System.out.println(reNameCount + " srt files renamed");
@@ -102,6 +103,7 @@ public class subtitleFormatter
      * @param newFileName
      * @return true of false depending whether the renaming was successful or not
      */
+
     static boolean reNameFunction(String fileName, String newFileName)
     {
         File oldFile = new File(directoryPath+"\\"+fileName);
@@ -119,6 +121,7 @@ public class subtitleFormatter
      * @return extension from the FileName
      *
      */
+
     static String getExtension(String z)
     {
         return z.substring(z.lastIndexOf('.') + 1);
