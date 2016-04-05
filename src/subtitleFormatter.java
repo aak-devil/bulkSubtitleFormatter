@@ -22,7 +22,7 @@ import java.nio.file.Paths;
  *
  *
  * Params: 1. Directory in which raw addic7ed subtitles are there
- *         2. Yes or No, in case you want to call the VideoFileMappper as well
+ *         2. Yes or No, in case you want to call the VideoFileMapper as well
  *
  *         Video File Mapper will map renamed to correct Video File and then rename it to the format described in inspiration
  *
@@ -35,11 +35,11 @@ import java.nio.file.Paths;
  *
  */
 
-public class subtitleFormatter
+class subtitleFormatter
 {
-    static String directoryPath;
-    static int reNameCount=0;
-    static PrinterClass printer;
+    private static String directoryPath;
+    private static int reNameCount=0;
+
     /**
      *
      * @param args Console Line Arguments
@@ -51,8 +51,8 @@ public class subtitleFormatter
     {
         directoryPath=args[0];
         char videoMapperChoice=args[1].charAt(0);
-        printer=new PrinterClass(directoryPath);
-        printer.dualPrinter("This is Subtitle Formatter");
+        PrinterClass printer = new PrinterClass(directoryPath);
+        PrinterClass.dualPrinter("This is Subtitle Formatter");
         /**
          * Using Java 8 Lambda Functions to iterate through the directory
          */
@@ -69,21 +69,14 @@ public class subtitleFormatter
                     String newFileName = fileName.substring(0, indexOfFirstPeriod + 1) + extension;
                     if (!(fileName.equals(newFileName)))
                     {
-                        try
+                        if(reNameFunction(fileName, newFileName))
                         {
-                            if(reNameFunction(fileName, newFileName))
-                            {
-                                printer.dualPrinter("This pair was a success\n");
-                                incrementCount();
-                            }
-                            else
-                            {
-                                printer.dualPrinter("This pair was not a success\n");
-                            }
+                            PrinterClass.dualPrinter("This pair was a success\n");
+                            incrementCount();
                         }
-                        catch (FileNotFoundException e)
+                        else
                         {
-                            e.printStackTrace();
+                            PrinterClass.dualPrinter("This pair was not a success\n");
                         }
                     }
                 }
@@ -92,20 +85,20 @@ public class subtitleFormatter
 
         if(reNameCount>0)
         {
-            printer.dualPrinter(reNameCount + " srt files renamed");
+            PrinterClass.dualPrinter(reNameCount + " srt files renamed");
         }
         else
         {
-            printer.dualPrinter("No srt suitable files found");
+            PrinterClass.dualPrinter("No srt suitable files found");
         }
         if(videoMapperChoice=='Y'||videoMapperChoice=='y')
         {
-            printer.dualPrinter("Moving control to Video Mapper");
+            PrinterClass.dualPrinter("Moving control to Video Mapper");
             new videoFileMapper(directoryPath);
         }
         else
         {
-            printer.dualPrinter("Video Mapper was not called");
+            PrinterClass.dualPrinter("Video Mapper was not called");
         }
     }
 
@@ -116,13 +109,12 @@ public class subtitleFormatter
      * @return true of false depending whether the renaming was successful or not
      */
 
-    static boolean reNameFunction(String fileName, String newFileName) throws FileNotFoundException
-    {
+    static boolean reNameFunction(String fileName, String newFileName) {
         File oldFile = new File(directoryPath+"\\"+fileName);
         File newFile = new File(directoryPath+"\\"+newFileName);
 
-        printer.dualPrinter("oldFile = " + oldFile);
-        printer.dualPrinter("newFile = " + newFile);
+        PrinterClass.dualPrinter("oldFile = " + oldFile);
+        PrinterClass.dualPrinter("newFile = " + newFile);
 
         return oldFile.renameTo(newFile);
     }
@@ -139,7 +131,7 @@ public class subtitleFormatter
         return z.substring(z.lastIndexOf('.') + 1);
     }
 
-    static void incrementCount()
+    private static void incrementCount()
     {
         reNameCount++;
     }
@@ -174,15 +166,12 @@ public class subtitleFormatter
 
 class videoFileMapper
 {
-    static File workingDirectory;
-    static String directoryWithFormattedSubtitles;
-    static String allFilesInDirectory[];
-    static String videoFiles[];
-    static String subtitleFiles[];
-    static String videoExtension;
-    static subtitleFormatter newSubtitleFormatter;
-    static int numOfFiles;
-    static PrinterClass printer;
+    private static String directoryWithFormattedSubtitles;
+    private static String[] allFilesInDirectory;
+    private static String[] videoFiles;
+    private static String[] subtitleFiles;
+    private static String[] videoExtension;
+    private static int numOfFiles;
 
     /**
      *
@@ -190,20 +179,21 @@ class videoFileMapper
      */
     videoFileMapper(String x) throws IOException
     {
-        this.newSubtitleFormatter = new subtitleFormatter();
-        this.directoryWithFormattedSubtitles=x;
-        this.fileCollection();
-        this.printer=new PrinterClass(this.directoryWithFormattedSubtitles);
+        subtitleFormatter newSubtitleFormatter = new subtitleFormatter();
+        directoryWithFormattedSubtitles=x;
+        fileCollection();
+        PrinterClass printer = new PrinterClass(directoryWithFormattedSubtitles);
     }
 
     /**
      * Collects all the files in the current directory and sorts them into two arrays, one for srt and one for video
      */
-    public static void fileCollection() throws FileNotFoundException
+    private static void fileCollection() throws FileNotFoundException
     {
         numOfFiles=quicklyTellMeNumberOfSubtitles();
         videoFiles=new String[numOfFiles];
         subtitleFiles=new String[numOfFiles];
+        videoExtension=new String[numOfFiles];
         int subIndex=0;
         int vidIndex=0;
         for (String fileNameIterator : allFilesInDirectory)
@@ -215,10 +205,7 @@ class videoFileMapper
             }
             else if(extension.equalsIgnoreCase("mp4")||extension.equalsIgnoreCase("avi")||extension.equalsIgnoreCase("mkv"))
             {
-                if(vidIndex==0)
-                {
-                    videoExtension=extension;
-                }
+                videoExtension[vidIndex]=extension;
                 videoFiles[vidIndex++]=getRidOfFileExtension(fileNameIterator);
             }
         }
@@ -228,22 +215,22 @@ class videoFileMapper
     /**
      * Calls the helper function reNameFunction in subtitleFormatter
      */
-    static void callerOfRenamer() throws FileNotFoundException
+    private static void callerOfRenamer() throws FileNotFoundException
     {
         int count=0;
         for(int i=0;i<numOfFiles;i++)
         {
-            if(newSubtitleFormatter.reNameFunction(attachVideoExtension(videoFiles[i]),attachVideoExtension(subtitleFiles[i])))
+            if(subtitleFormatter.reNameFunction(attachVideoExtension(videoFiles[i], i),attachVideoExtension(subtitleFiles[i], i)))
             {
-                printer.dualPrinter("This pair was a success\n");
+                PrinterClass.dualPrinter("This pair was a success\n");
                 count++;
             }
             else
             {
-                printer.dualPrinter("This pair was not a success\n");
+                PrinterClass.dualPrinter("This pair was not a success\n");
             }
         }
-        printer.dualPrinter(count + " video files renamed");
+        PrinterClass.dualPrinter(count + " video files renamed");
     }
 
     /**
@@ -251,23 +238,23 @@ class videoFileMapper
      * @param z Base File Name
      * @return File Name with attached Extension
      */
-    static String attachVideoExtension(String z)
+    private static String attachVideoExtension(String z, int index)
     {
-        return z+"."+videoExtension;
+        return z+"."+videoExtension[index];
     }
 
     /**
      *
      * @return number of formatted srt files in the directory
      */
-    static int quicklyTellMeNumberOfSubtitles()
+    private static int quicklyTellMeNumberOfSubtitles()
     {
         int count=0;
-        workingDirectory = new File(directoryWithFormattedSubtitles);
-        allFilesInDirectory=workingDirectory.list();
+        File workingDirectory = new File(directoryWithFormattedSubtitles);
+        allFilesInDirectory= workingDirectory.list();
         for (String fileName : allFilesInDirectory)
         {
-            if((newSubtitleFormatter.getExtension(fileName).equalsIgnoreCase("srt")))
+            if((subtitleFormatter.getExtension(fileName).equalsIgnoreCase("srt")))
             {
                 count++;
             }
@@ -280,7 +267,7 @@ class videoFileMapper
      * @param z Full File Name
      * @return Base File Name without extension
      */
-    public static String getRidOfFileExtension(String z)
+    private static String getRidOfFileExtension(String z)
     {
         return z.substring(0, z.length() - 4);
     }
@@ -291,9 +278,7 @@ class videoFileMapper
  */
 class PrinterClass
 {
-    static String workingDirectory;
-    static File file;
-    static PrintWriter fileWriter;
+    private static PrintWriter fileWriter;
 
     /**
      * Constructor to initialize PrintWriter Object and the File
@@ -302,8 +287,8 @@ class PrinterClass
      */
     PrinterClass(String z) throws IOException
     {
-        workingDirectory=z;
-        file = new File(workingDirectory+"/subtitleFormatterLog.txt");
+        String workingDirectory = z;
+        File file = new File(workingDirectory + "/subtitleFormatterLog.txt");
         fileWriter = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
     }
 
